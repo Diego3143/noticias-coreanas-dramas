@@ -151,6 +151,11 @@ body {
     background-color: #000;
 }
 
+.card-image-link {
+    display: block;
+    text-decoration: none;
+}
+
 .card-image {
     position: absolute;
     top: 0;

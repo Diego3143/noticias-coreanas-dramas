@@ -24,19 +24,19 @@ html/
 ├── love_in_sync.html             # Detalle: Love in Sync
 │
 ├── css/
-│   ├── style.css                 # Estilos principales (929 lineas)
+│   ├── style.css                 # Estilos principales
 │   ├── login.css                 # Estilos de login/registro
 │   ├── comments-likes.css        # Estilos de comentarios y likes
 │   └── hamburger.css             # Estilos de menu lateral y hamburguesa
 │
 ├── js/
 │   ├── firebase-config.js        # Config Firebase (API keys, init)
-│   ├── script.js                 # Filtrado por categorias (index)
+│   ├── script.js                 # Filtrado por categorias + sistema de anuncios en index
 │   ├── index-menu.js             # Menu lateral hamburguesa (module)
 │   ├── login.js                  # Logica login/registro (module)
 │   ├── comments-likes.js         # Comentarios y likes en tiempo real (module)
 │   ├── detail-features.js        # Favoritos, compartir, tracker episodios
-│   └── ads.js                    # Sistema de anuncios
+│   └── ads.js                    # Sistema de anuncios en páginas de detalle
 │
 └── images/
     ├── shop_killers.jpg          # Poster A Shop for Killers S2
@@ -55,16 +55,17 @@ html/
 ### 2.1 index.html
 
 **Scripts cargados (en orden):**
-1. `js/script.js` (regular) - Filtrado de categorias
+1. `js/script.js` (regular) - Filtrado de categorias + sistema de anuncios "Ver más"
 2. `js/index-menu.js` (module) - Menu lateral
-3. `js/ads.js` (regular) - Inyeccion de anuncios
+
+**Nota:** `ads.js` NO se carga en el index. Los anuncios del index se manejan directamente en el HTML y en `script.js`.
 
 **Estructura del body:**
 ```
 header.main-header          → h1 "Doramas en Emisión", p.tagline
 nav.categories-nav          → 6 botones de categoría (Todos, Acción, Romance, Fantasía, Médico, Histórico)
 main.news-container
-  └─ div.news-grid#news-grid → 7 article.news-card + anuncios inyectados por ads.js
+  └─ div.news-grid#news-grid → 7 article.news-card (con imágenes clickeables y "Ver más" hacia anuncios)
 button.hamburger-menu-btn   → Menu hamburguesa
 footer.main-footer          → Copyright
 ```
@@ -76,18 +77,28 @@ footer.main-footer          → Copyright
 **Cada article.news-card tiene:**
 ```html
 <article class="news-card" data-category="CATEGORIA" id="news-N">
-    <div class="card-image-wrapper">
-        <img src="images/ARCHIVO.jpg" alt="TITULO" class="card-image" loading="lazy" width="400" height="300">
-        <span class="card-badge badge-CATEGORIA">TEXTO_BADGE</span>
-    </div>
+    <a href="ARCHIVO.html" class="card-image-link">
+        <div class="card-image-wrapper">
+            <img src="images/ARCHIVO.jpg" alt="TITULO" class="card-image" loading="lazy" width="400" height="300">
+            <span class="card-badge badge-CATEGORIA">TEXTO_BADGE</span>
+        </div>
+    </a>
     <div class="card-content">
         <span class="card-date">Estreno: FECHA</span>
         <h2 class="card-title">TITULO</h2>
         <p class="card-excerpt">SINOPSIS_CORTA</p>
-        <a href="ARCHIVO.html" class="read-more-btn">Ver más <span class="arrow">&rarr;</span></a>
+        <a href="URL_ANUNCIO" class="read-more-btn" data-detail="ARCHIVO.html" target="_blank" rel="noopener noreferrer">Ver más <span class="arrow">&rarr;</span></a>
     </div>
 </article>
 ```
+
+**Sistema de anuncios en "Ver más":**
+- La imagen de cada tarjeta (`.card-image-link`) enlaza directo a la página de detalle
+- El botón "Ver más" (`.read-more-btn`) tiene `data-detail` con la URL real del dorama
+- El `href` del "Ver más" apunta a la URL del anuncio
+- **Primer clic** → abre el anuncio en pestaña nueva, guarda en `localStorage` que ya se mostró
+- **Segundo clic** → como ya vio el anuncio, ahora sí lleva a la página de detalle
+- Se alternan los 2 enlaces de anuncios entre las 7 tarjetas
 
 **Categorías disponibles:**
 | data-category | badge class | Texto |
@@ -124,10 +135,11 @@ main.detail-container
                  ├─ section.detail-section → Sinopsis (2 párrafos)
                  ├─ section.detail-section → Expectativas y Producción
                  ├─ section.detail-section → Reparto Principal (div.cast-grid)
+                 ├─ [ads.js inyecta] div.ad-wrapper → Anuncio después del reparto
                  ├─ [detail-features.js inyecta] div.detail-toolbar → Favorito + Compartir
+                 ├─ [ads.js inyecta] div.ad-wrapper → Anuncio después del toolbar
                  ├─ [detail-features.js inyecta] section.episode-tracker-section → Tracker
-                 ├─ [comments-likes.js inyecta] div.likes-comments-bar → Like + Comentar
-                 └─ [ads.js inyecta] div.ad-wrapper → Anuncios
+                 └─ [comments-likes.js inyecta] div.likes-comments-bar → Like + Comentar
 button.hamburger-menu-btn
 footer.main-footer
 ```
@@ -178,14 +190,25 @@ Configura e inicializa Firebase. Exporta:
 
 ### 3.2 js/script.js (regular)
 
-Filtrado de tarjetas por categoría en index.html.
+Filtrado de tarjetas por categoría en index.html + sistema de anuncios "Ver más".
 
-**Lógica:**
+**Lógica de filtrado:**
 - Al hacer click en un `.category-btn`:
   1. Quita `.active` de todos los botones, lo agrega al clickeado
   2. Obtiene `data-category` del botón
   3. Si es "all" o coincide con `data-category` de la tarjeta → `display: flex` + re-animate fadeIn
   4. Si no → `display: none`
+
+**Sistema de anuncios "Ver más" (index):**
+- Usa `localStorage` key `dorama_ad_viewed` (array de IDs de tarjetas)
+- Busca todos los `.read-more-btn[data-detail]`
+- **Primer clic:** si la tarjeta no está en el array, la agrega y abre la URL del anuncio (`href`) en pestaña nueva
+- **Segundo clic:** si la tarjeta ya está en el array, navega a la URL de `data-detail` (página real)
+
+**Para agregar un nuevo anuncio en el index:**
+1. Agregar el `href` del anuncio al botón "Ver más"
+2. Agregar `data-detail="pagina_real.html"` con la URL real del dorama
+3. No necesita modificar `script.js`
 
 ---
 
@@ -274,32 +297,32 @@ Se inyecta después de la sección de reparto:
 
 ### 3.6 js/ads.js (regular)
 
-Sistema de anuncios flexible. **Array de anuncios:**
+Sistema de anuncios en páginas de detalle. **NO se ejecuta en el index.**
+
+**Array de anuncios:**
 
 ```javascript
 const ADS = [
     {
         id: 'ad-1',
         url: 'https://www.effectivecpmnetwork.com/ygd9cvhvm6?key=0ff3cff18391c0af70e39222d51a1c3a',
-        label: 'Publicidad',
-        type: 'banner',
-        size: 'horizontal'
+        label: 'Publicidad'
     },
     {
         id: 'ad-2',
         url: 'https://www.effectivecpmnetwork.com/nvbf20zwi?key=d865ba581655ace4fea9ee9780fc7b0d',
-        label: 'Publicidad',
-        type: 'banner',
-        size: 'horizontal'
+        label: 'Publicidad'
     },
 ];
 ```
 
-**Ubicación de anuncios:**
-- **Index:** ad-1 después de tarjeta 3, ad-2 después de tarjeta 6 (dentro del grid)
-- **Detalle:** ad-1 después de la sección de reparto, ad-2 después del toolbar de favoritos
+**Ubicación de anuncios en detalle:**
+- **ad-1:** Después de la sección de reparto (último `.detail-section`)
+- **ad-2:** Después del toolbar de favoritos (`.detail-toolbar`)
 
-**Para agregar más anuncios:** Agregar objetos al array `ADS` en `js/ads.js`. El sistema inyecta automáticamente.
+**Timing:** Usa `setTimeout(fn, 0)` para asegurar que el toolbar exista antes de inyectar ad-2 (el toolbar lo crea `detail-features.js`).
+
+**Para agregar más anuncios:** Agregar objetos al array `ADS` en `js/ads.js`. El sistema inyecta automáticamente en las páginas de detalle.
 
 ---
 
@@ -355,6 +378,18 @@ Sistema de autenticación completo.
 | medico | #0d9488 (teal) |
 | historico | #d97706 (ámbar) |
 
+**Estilos de anuncios:**
+- `.ad-wrapper` → Contenedor del anuncio, `grid-column: 1 / -1` en index
+- `.ad-link` → Enlace estilizado con gradiente sutil y borde púrpura
+- `.ad-label` → Texto "Publicidad" en gris
+- `.ad-content` → Icono + "Descubre más" + flecha
+- `.detail-content .ad-wrapper` → Margen específico para anuncios en detalle
+
+**Estilos de tarjetas:**
+- `.card-image-link` → Enlace de bloque sobre la imagen (clickeable)
+- `.card-image-wrapper` → Contenedor de imagen con relación de aspecto 16:9
+- `.news-card` → Tarjeta con hover effect (scale imagen, translateY)
+
 **Breakpoints responsive:**
 - 768px → Ajustes generales
 - 640px → Navegación horizontal scroll
@@ -405,18 +440,22 @@ Dentro de `div.news-grid`, agregar antes del cierre `</div>`:
 ```html
 <!-- Tarjeta N: TITULO (CATEGORÍA) -->
 <article class="news-card" data-category="CATEGORIA" id="news-N">
-    <div class="card-image-wrapper">
-        <img src="images/ARCHIVO.jpg" alt="TITULO" class="card-image" loading="lazy" width="400" height="300">
-        <span class="card-badge badge-CATEGORIA">TEXTO_BADGE</span>
-    </div>
+    <a href="ARCHIVO.html" class="card-image-link">
+        <div class="card-image-wrapper">
+            <img src="images/ARCHIVO.jpg" alt="TITULO" class="card-image" loading="lazy" width="400" height="300">
+            <span class="card-badge badge-CATEGORIA">TEXTO_BADGE</span>
+        </div>
+    </a>
     <div class="card-content">
         <span class="card-date">Estreno: FECHA</span>
         <h2 class="card-title">TITULO</h2>
         <p class="card-excerpt">SINOPSIS_CORTA (máximo 3 líneas)</p>
-        <a href="ARCHIVO.html" class="read-more-btn">Ver más <span class="arrow">&rarr;</span></a>
+        <a href="URL_ANUNCIO" class="read-more-btn" data-detail="ARCHIVO.html" target="_blank" rel="noopener noreferrer">Ver más <span class="arrow">&rarr;</span></a>
     </div>
 </article>
 ```
+
+**Nota sobre anuncios:** El `href` del "Ver más" debe apuntar a la URL del anuncio. El `data-detail` debe apuntar a la página real del dorama. Alternar entre los 2 enlaces de anuncios disponibles.
 
 ### Paso 4: Actualizar sitemap.xml
 
@@ -444,23 +483,25 @@ Si la imagen de la card en el index es diferente a la del póster del detalle, u
 
 ## 6. Cómo Agregar un Nuevo Anuncio
 
+### En el index (botones "Ver más"):
+
+1. Agregar el `href` del anuncio al botón "Ver más" de la tarjeta correspondiente
+2. Asegurar que `data-detail` apunte a la página real del dorama
+3. No requiere modificar JavaScript
+
+### En páginas de detalle:
+
 Editar `js/ads.js` y agregar al array `ADS`:
 
 ```javascript
 {
     id: 'ad-N',
     url: 'https://URL_DEL_ANUNCIO',
-    label: 'Publicidad',
-    type: 'banner',
-    size: 'horizontal'
+    label: 'Publicidad'
 },
 ```
 
-El sistema automáticamente:
-- En index: lo inserta después de la tarjeta correspondiente (cada 3 tarjetas)
-- En detalle: lo inserta después del toolbar de favoritos
-
-Para cambiar la posición, modificar las funciones `injectIndexAds()` y `injectDetailAds()`.
+El sistema automáticamente lo inserta en las páginas de detalle.
 
 ---
 
@@ -527,6 +568,7 @@ Para cambiar la posición, modificar las funciones `injectIndexAds()` y `injectD
 |-----|------|-----------|
 | `dorama_favorites` | `string (JSON array)` | `["page_id_1", "page_id_2", ...]` |
 | `dorama_episodes` | `string (JSON object)` | `{"page_id": [1, 3, 5], ...}` |
+| `dorama_ad_viewed` | `string (JSON array)` | `["news-1", "news-2", ...]` (IDs de tarjetas que ya mostraron anuncio) |
 
 ---
 
@@ -538,7 +580,9 @@ Para cambiar la posición, modificar las funciones `injectIndexAds()` y `injectD
 4. **Firebase config** está hardcodeada en `firebase-config.js` (no usar variables de entorno)
 5. **Las imágenes** deben subirse manualmente a `images/`
 6. **El dominio** en URLs (canonical, og:url, sitemap) es `tudominio.com` - debe cambiarse al dominio real
-7. **El index** carga `script.js` primero (filtrado), luego `index-menu.js` (module), luego `ads.js`
+7. **El index** carga `script.js` (filtrado + anuncios) y `index-menu.js` (module). NO carga `ads.js`
 8. **Las páginas de detalle** cargan `index-menu.js`, `comments-likes.js`, `detail-features.js`, `ads.js`
 9. **El login** tiene `robots: noindex, nofollow` (correcto)
 10. **El sitemap** excluye login.html (correcto)
+11. **Sistema de anuncios "Ver más":** Primer clic abre anuncio, segundo clic lleva a la página real (usa `localStorage`)
+12. **Imágenes clickeables:** Cada tarjeta tiene un `<a class="card-image-link">` que lleva directo al detalle

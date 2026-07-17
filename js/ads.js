@@ -1,4 +1,6 @@
-// Sistema de anuncios - Fácil de expandir: solo agregar objetos al array ADS
+// Sistema de anuncios en páginas de detalle
+// En el index, los enlaces "Ver más" apuntan directo a los anuncios (definidos en el HTML)
+// Para agregar más enlaces: agregar objetos al array ADS y usarlos en el HTML
 (function () {
     'use strict';
 
@@ -6,20 +8,17 @@
         {
             id: 'ad-1',
             url: 'https://www.effectivecpmnetwork.com/ygd9cvhvm6?key=0ff3cff18391c0af70e39222d51a1c3a',
-            label: 'Publicidad',
-            type: 'banner',
-            size: 'horizontal'
+            label: 'Publicidad'
         },
         {
             id: 'ad-2',
             url: 'https://www.effectivecpmnetwork.com/nvbf20zwi?key=d865ba581655ace4fea9ee9780fc7b0d',
-            label: 'Publicidad',
-            type: 'banner',
-            size: 'horizontal'
+            label: 'Publicidad'
         },
     ];
 
     const pageId = window.location.pathname.split('/').pop().replace('.html', '') || 'index';
+    if (pageId === 'index') return;
 
     function createAdElement(ad) {
         const wrapper = document.createElement('div');
@@ -57,21 +56,6 @@
         return wrapper;
     }
 
-    function injectIndexAds() {
-        const grid = document.getElementById('news-grid');
-        if (!grid) return;
-
-        const cards = grid.querySelectorAll('.news-card');
-        if (cards.length >= 3 && ADS[0]) {
-            const ad1 = createAdElement(ADS[0]);
-            grid.insertBefore(ad1, cards[3]);
-        }
-        if (cards.length >= 6 && ADS[1]) {
-            const ad2 = createAdElement(ADS[1]);
-            grid.insertBefore(ad2, cards[6]);
-        }
-    }
-
     function injectDetailAds() {
         const detailContent = document.querySelector('.detail-content');
         if (!detailContent) return;
@@ -89,21 +73,13 @@
         }
     }
 
-    function runAds() {
-        if (pageId === 'index') {
-            injectIndexAds();
-        } else {
-            injectDetailAds();
-        }
-    }
-
     function scheduleAds() {
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', () => {
-                setTimeout(runAds, 0);
+                setTimeout(injectDetailAds, 0);
             });
         } else {
-            setTimeout(runAds, 0);
+            setTimeout(injectDetailAds, 0);
         }
     }
 
