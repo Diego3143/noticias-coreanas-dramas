@@ -89,13 +89,23 @@
         }
     }
 
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', () => {
-            if (pageId === 'index') injectIndexAds();
-            else injectDetailAds();
-        });
-    } else {
-        if (pageId === 'index') injectIndexAds();
-        else injectDetailAds();
+    function runAds() {
+        if (pageId === 'index') {
+            injectIndexAds();
+        } else {
+            injectDetailAds();
+        }
     }
+
+    function scheduleAds() {
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => {
+                setTimeout(runAds, 0);
+            });
+        } else {
+            setTimeout(runAds, 0);
+        }
+    }
+
+    scheduleAds();
 })();
