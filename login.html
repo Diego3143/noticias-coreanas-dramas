@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="description" content="Inicia sesión o regístrate en Noticias de Corea para guardar tus dramas favoritos y comentar.">
+    <link rel="canonical" href="https://tudominio.com/login.html">
+    <title>Acceder | K-Dramas Noticias de Corea</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/login.css">
+</head>
+<body>
+    <div class="auth-container">
+        <a href="index.html" class="back-home-btn">&larr; Volver a K-Dramas en Emisión</a>
+        
+        <div class="auth-card">
+            <!-- Pestañas para alternar entre Iniciar Sesión y Registro -->
+            <div class="auth-tabs">
+                <button type="button" class="auth-tab active" id="tab-login">Iniciar Sesión</button>
+                <button type="button" class="auth-tab" id="tab-register">Registrarse</button>
+            </div>
+
+            <!-- Contenido de alertas/mensajes de error -->
+            <div id="auth-alert" class="auth-alert hidden"></div>
+
+            <!-- Formulario de Acceso -->
+            <form id="auth-form" class="auth-form" novalidate>
+                <!-- Campo de Nombre (Oculto al inicio, solo para registro) -->
+                <div class="form-group hidden" id="group-name">
+                    <label for="reg-name">Nombre Completo</label>
+                    <input type="text" id="reg-name" placeholder="Tu nombre y apellido" required autocomplete="name">
+                </div>
+
+                <!-- Campo de Email -->
+                <div class="form-group">
+                    <label for="auth-email">Correo Electrónico</label>
+                    <input type="email" id="auth-email" placeholder="correo@ejemplo.com" required autocomplete="email">
+                </div>
+
+                <!-- Campo de Contraseña -->
+                <div class="form-group">
+                    <label for="auth-password">Contraseña</label>
+                    <input type="password" id="auth-password" placeholder="Mínimo 6 caracteres" required autocomplete="current-password">
+                </div>
+
+                <!-- Campo de Foto de Perfil (Oculto al inicio, solo para registro) -->
+                <div class="form-group hidden" id="group-avatar">
+                    <label for="reg-avatar">Foto de Perfil</label>
+                    <div class="avatar-upload-container">
+                        <div class="avatar-preview-wrapper">
+                            <img id="avatar-preview" src="https://api.dicebear.com/7.x/bottts/svg?seed=avatar" alt="Vista previa de perfil">
+                        </div>
+                        <div class="avatar-upload-actions">
+                            <input type="file" id="reg-avatar" accept="image/*" class="avatar-input-hidden">
+                            <button type="button" class="btn-secondary" id="btn-select-avatar">Subir Imagen</button>
+                            <span class="file-name-text" id="avatar-filename">Sin archivo seleccionado</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Botón de Envío -->
+                <button type="submit" class="submit-btn" id="btn-submit">
+                    <span id="btn-text">Ingresar</span>
+                    <div class="spinner hidden" id="btn-spinner"></div>
+                </button>
+            </form>
+
+            <div class="auth-footer">
+                <p id="auth-footer-text">¿No tienes cuenta? <a href="#" id="link-switch-state">Regístrate gratis</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script de autenticación de Firebase -->
+    <script type="module" src="js/login.js"></script>
+</body>
+</html>

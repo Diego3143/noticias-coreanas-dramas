@@ -1,0 +1,220 @@
+/* --- ESTILOS DE MENÚ HAMBURGUESA Y DRAWER (MENÚ LATERAL) --- */
+
+/* Botón Hamburguesa */
+.hamburger-menu-btn {
+    position: fixed;
+    top: 1.5rem;
+    right: 1.5rem;
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    background: rgba(26, 29, 38, 0.7);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    z-index: 900;
+    transition: var(--transition);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.hamburger-menu-btn:hover {
+    background: rgba(26, 29, 38, 0.9);
+    border-color: rgba(255, 255, 255, 0.15);
+    transform: translateY(-2px);
+}
+
+.hamburger-line {
+    width: 22px;
+    height: 2px;
+    background-color: var(--text-primary);
+    border-radius: 9999px;
+    transition: var(--transition);
+}
+
+/* Cambios de Hamburguesa Activa */
+.hamburger-menu-btn.active .hamburger-line:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+}
+
+.hamburger-menu-btn.active .hamburger-line:nth-child(2) {
+    opacity: 0;
+    transform: translateX(-10px);
+}
+
+.hamburger-menu-btn.active .hamburger-line:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+}
+
+/* Menú Lateral Drawer */
+.side-drawer {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 320px;
+    height: 100%;
+    background: rgba(18, 20, 28, 0.95);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border-left: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: -10px 0 40px rgba(0, 0, 0, 0.8);
+    z-index: 950;
+    display: flex;
+    flex-direction: column;
+    transform: translateX(100%);
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.side-drawer.active {
+    transform: translateX(0);
+}
+
+.drawer-header {
+    padding: 1.5rem;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.drawer-close-btn {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 2rem;
+    cursor: pointer;
+    line-height: 1;
+    transition: var(--transition);
+}
+
+.drawer-close-btn:hover {
+    color: #ef4444;
+}
+
+.drawer-body {
+    padding: 0 2rem 2rem 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+    flex-grow: 1;
+}
+
+/* Perfil de Usuario en Drawer */
+.drawer-profile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    text-align: center;
+}
+
+.profile-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 3px solid rgba(139, 92, 246, 0.3);
+    object-fit: cover;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+    background-color: var(--bg-primary);
+}
+
+.profile-name {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+/* Enlaces del Drawer */
+.drawer-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.drawer-link {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 1.05rem;
+    font-weight: 600;
+    padding: 0.85rem 1.25rem;
+    border-radius: 12px;
+    transition: var(--transition);
+    border: 1px solid transparent;
+}
+
+.drawer-link:hover {
+    color: var(--text-primary);
+    background: rgba(255, 255, 255, 0.03);
+    border-color: rgba(255, 255, 255, 0.05);
+}
+
+.drawer-link.active {
+    color: var(--accent-blue);
+    background: rgba(59, 130, 246, 0.08);
+    border-color: rgba(59, 130, 246, 0.1);
+}
+
+.drawer-link-btn {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    color: #f87171;
+    background: rgba(239, 68, 68, 0.05);
+    border: 1px solid rgba(239, 68, 68, 0.1);
+    font-family: var(--font-main);
+    font-size: 1.05rem;
+    font-weight: 600;
+    padding: 0.85rem 1.25rem;
+    border-radius: 12px;
+    cursor: pointer;
+    width: 100%;
+    text-align: left;
+    transition: var(--transition);
+    margin-top: 1rem;
+}
+
+.drawer-link-btn:hover {
+    background: rgba(239, 68, 68, 0.15);
+    border-color: rgba(239, 68, 68, 0.2);
+    transform: translateY(-2px);
+}
+
+.drawer-link-btn.hidden {
+    display: none !important;
+}
+
+/* Superposición oscura */
+.drawer-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(7, 9, 14, 0.6);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    z-index: 920;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.drawer-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* Media Queries para Drawer */
+@media (max-width: 480px) {
+    .side-drawer {
+        width: 280px;
+    }
+}
