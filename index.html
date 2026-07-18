@@ -60,9 +60,11 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    <link rel="preload" href="css/style.css" as="style">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/hamburger.css">
+    <link rel="stylesheet" href="css/theme-toggle.css">
 </head>
 <body>
     <header class="main-header">
@@ -206,7 +208,8 @@
         <p>&copy; 2026 Noticias de Corea - Sección Doramas. Todos los derechos reservados.</p>
     </footer>
 
-    <script src="js/script.js"></script>
+    <script defer src="js/script.js"></script>
     <script type="module" src="js/index-menu.js"></script>
+    <script defer src="js/theme-toggle.js"></script>
 </body>
 </html>

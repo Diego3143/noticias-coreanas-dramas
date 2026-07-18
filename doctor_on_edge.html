@@ -51,9 +51,10 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/hamburger.css">
+    <link rel="stylesheet" href="css/theme-toggle.css">
 </head>
 <body>
     <header class="main-header">
@@ -69,7 +70,7 @@
                 <!-- Columna Izquierda: Póster e Info rápida -->
                 <div class="detail-sidebar">
                     <div class="detail-poster-wrapper">
-                        <img src="images/doctor_on_edge.jpg" alt="Doctor on the Edge" class="detail-poster" width="400" height="600">
+                        <img src="images/doctor_on_edge.jpg" alt="Doctor on the Edge" class="detail-poster" width="400" height="600" loading="lazy">
                     </div>
                     <div class="detail-info-block">
                         <h3>Ficha Técnica</h3>
@@ -146,7 +147,8 @@
 
 <script type="module" src="js/index-menu.js"></script>
 <script type="module" src="js/comments-likes.js"></script>
-<script src="js/detail-features.js"></script>
-<script src="js/ads.js"></script>
+<script defer src="js/detail-features.js"></script>
+<script defer src="js/ads.js"></script>
+<script defer src="js/theme-toggle.js"></script>
 </body>
 </html>

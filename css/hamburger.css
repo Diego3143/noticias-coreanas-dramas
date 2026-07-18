@@ -218,3 +218,44 @@
         width: 280px;
     }
 }
+
+/* --- MODO CLARO PARA HAMBURGUESA --- */
+[data-theme="light"] .hamburger-menu-btn {
+    background: rgba(255, 255, 255, 0.85);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .hamburger-menu-btn:hover {
+    background: rgba(255, 255, 255, 0.95);
+    border-color: rgba(0, 0, 0, 0.15);
+}
+
+[data-theme="light"] .side-drawer {
+    background: rgba(255, 255, 255, 0.95);
+    border-left: 1px solid rgba(0, 0, 0, 0.08);
+    box-shadow: -10px 0 40px rgba(0, 0, 0, 0.15);
+}
+
+[data-theme="light"] .drawer-profile {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .drawer-link:hover {
+    background: rgba(0, 0, 0, 0.04);
+    border-color: rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .drawer-link-btn {
+    background: rgba(239, 68, 68, 0.05);
+    border: 1px solid rgba(239, 68, 68, 0.1);
+}
+
+[data-theme="light"] .drawer-link-btn:hover {
+    background: rgba(239, 68, 68, 0.1);
+    border-color: rgba(239, 68, 68, 0.15);
+}
+
+[data-theme="light"] .drawer-overlay {
+    background: rgba(0, 0, 0, 0.3);
+}

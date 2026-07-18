@@ -316,3 +316,53 @@
         padding: 1.75rem 1.25rem;
     }
 }
+
+/* --- MODO CLARO PARA LOGIN --- */
+[data-theme="light"] .auth-container {
+    background: radial-gradient(circle at top right, rgba(139, 92, 246, 0.08), transparent 40%),
+                radial-gradient(circle at bottom left, rgba(59, 130, 246, 0.08), transparent 40%),
+                var(--bg-primary);
+}
+
+[data-theme="light"] .auth-card {
+    background: rgba(255, 255, 255, 0.85);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.1),
+                0 0 50px -10px rgba(139, 92, 246, 0.05);
+}
+
+[data-theme="light"] .auth-tabs {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .form-group input[type="text"],
+[data-theme="light"] .form-group input[type="email"],
+[data-theme="light"] .form-group input[type="password"] {
+    background: rgba(0, 0, 0, 0.02);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    color: var(--text-primary);
+}
+
+[data-theme="light"] .form-group input:focus {
+    background: rgba(0, 0, 0, 0.03);
+    box-shadow: 0 0 15px rgba(59, 130, 246, 0.1);
+}
+
+[data-theme="light"] .avatar-upload-container {
+    background: rgba(0, 0, 0, 0.02);
+    border: 1px dashed rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .avatar-preview-wrapper {
+    border: 2px solid rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .btn-secondary {
+    background: rgba(0, 0, 0, 0.04);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .btn-secondary:hover {
+    background: rgba(0, 0, 0, 0.06);
+    border-color: rgba(0, 0, 0, 0.15);
+}

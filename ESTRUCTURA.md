@@ -27,7 +27,8 @@ html/
 │   ├── style.css                 # Estilos principales
 │   ├── login.css                 # Estilos de login/registro
 │   ├── comments-likes.css        # Estilos de comentarios y likes
-│   └── hamburger.css             # Estilos de menu lateral y hamburguesa
+│   ├── hamburger.css             # Estilos de menu lateral y hamburguesa
+│   └── theme-toggle.css          # Estilos para modo oscuro/claro
 │
 ├── js/
 │   ├── firebase-config.js        # Config Firebase (API keys, init)
@@ -36,7 +37,8 @@ html/
 │   ├── login.js                  # Logica login/registro (module)
 │   ├── comments-likes.js         # Comentarios y likes en tiempo real (module)
 │   ├── detail-features.js        # Favoritos, compartir, tracker episodios
-│   └── ads.js                    # Sistema de anuncios en páginas de detalle
+│   ├── ads.js                    # Sistema de anuncios en páginas de detalle
+│   └── theme-toggle.js           # Sistema de modo oscuro/claro
 │
 └── images/
     ├── shop_killers.jpg          # Poster A Shop for Killers S2
@@ -57,6 +59,7 @@ html/
 **Scripts cargados (en orden):**
 1. `js/script.js` (regular) - Filtrado de categorias + sistema de anuncios "Ver más"
 2. `js/index-menu.js` (module) - Menu lateral
+3. `js/theme-toggle.js` (regular) - Sistema de modo oscuro/claro
 
 **Nota:** `ads.js` NO se carga en el index. Los anuncios del index se manejan directamente en el HTML y en `script.js`.
 
@@ -118,6 +121,7 @@ Todas siguen la misma plantilla. Scripts cargados:
 2. `js/comments-likes.js` (module)
 3. `js/detail-features.js` (regular)
 4. `js/ads.js` (regular)
+5. `js/theme-toggle.js` (regular) - Sistema de modo oscuro/claro
 
 **Estructura del body:**
 ```
@@ -154,7 +158,7 @@ footer.main-footer
 
 ### 2.3 login.html
 
-**Scripts:** `js/login.js` (module)
+**Scripts:** `js/login.js` (module), `js/theme-toggle.js` (regular)
 
 **Estructura:**
 ```
@@ -569,6 +573,7 @@ El sistema automáticamente lo inserta en las páginas de detalle.
 | `dorama_favorites` | `string (JSON array)` | `["page_id_1", "page_id_2", ...]` |
 | `dorama_episodes` | `string (JSON object)` | `{"page_id": [1, 3, 5], ...}` |
 | `dorama_ad_viewed` | `string (JSON array)` | `["news-1", "news-2", ...]` (IDs de tarjetas que ya mostraron anuncio) |
+| `dorama_theme` | `string` | `"dark"` o `"light"` (modo de tema, por defecto "dark") |
 
 ---
 
@@ -586,3 +591,41 @@ El sistema automáticamente lo inserta en las páginas de detalle.
 10. **El sitemap** excluye login.html (correcto)
 11. **Sistema de anuncios "Ver más":** Primer clic abre anuncio, segundo clic lleva a la página real (usa `localStorage`)
 12. **Imágenes clickeables:** Cada tarjeta tiene un `<a class="card-image-link">` que lleva directo al detalle
+13. **Modo oscuro/claro:** Botón flotante en esquina inferior derecha. Guarda preferencia en `localStorage` key `dorama_theme`
+
+---
+
+## 12. Sistema de Modo Oscuro/Claro
+
+### Descripción
+Botón flotante que permite alternar entre modo oscuro (por defecto) y modo claro. La preferencia se guarda en `localStorage` y persiste entre sesiones.
+
+### Archivos involucrados
+- `css/theme-toggle.css` - Estilos para ambos modos
+- `js/theme-toggle.js` - Lógica de toggle y persistencia
+
+### Funcionamiento
+1. **Botón flotante:** Posición fija en esquina inferior derecha (`position: fixed; bottom: 20px; right: 20px`)
+2. **Iconos:** Luna para modo oscuro, sol para modo claro
+3. **Persistencia:** Guarda en `localStorage` key `dorama_theme` (`"dark"` o `"light"`)
+4. **Tema por defecto:** Modo oscuro (`"dark"`)
+5. **Aplicación:** Usa atributo `data-theme` en `<html>` para cambiar variables CSS
+
+### Variables CSS modificadas
+| Variable | Modo Oscuro | Modo Claro |
+|----------|-------------|------------|
+| `--bg-primary` | `#0a0b10` | `#ffffff` |
+| `--bg-secondary` | `#12141c` | `#f8f9fa` |
+| `--card-bg` | `#1a1d26` | `#ffffff` |
+| `--text-primary` | `#f3f4f6` | `#1a1a2e` |
+| `--text-secondary` | `#9ca3af` | `#6b7280` |
+| `--shadow-premium` | `0 10px 30px -10px rgba(0, 0, 0, 0.7)` | `0 4px 20px rgba(0, 0, 0, 0.08)` |
+
+### Archivos HTML que cargan el sistema
+- `index.html`
+- `login.html`
+- Todas las páginas de detalle (7 páginas)
+
+### Para agregar nuevo archivo HTML
+1. Agregar `<link rel="stylesheet" href="css/theme-toggle.css">` en el `<head>`
+2. Agregar `<script src="js/theme-toggle.js"></script>` antes de `</body>`
